@@ -139,4 +139,4 @@ if __name__ == "__main__":
         time.sleep(args.wait_time + random.uniform(0, 3))
 
     # 保存pdf
-    os.system("download_pdfs.py")
+    os.system("python download_pdfs.py")
