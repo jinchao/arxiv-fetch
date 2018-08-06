@@ -126,13 +126,12 @@ for i in range(args.start_index, args.max_index, args.results_per_iteration):
     print('本阶段新增 %d 条记录, 已存在（跳过） %d 条记录' % (num_added, num_skipped))
 
     if len(parse.entries) == 0:
-        print('arxiv无响应')
+        print('arxiv无响应，程序退出，请重试')
         print(response)
         break
 
     if num_added == 0 and args.break_on_no_added == 1:
-        print('没有新的文件被添加，程序退出')
-        break
+        print('本阶段没有新的文件被添加')
 
     print('休息%i秒' % (args.wait_time,))
     time.sleep(args.wait_time + random.uniform(0, 3))
