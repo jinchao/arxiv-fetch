@@ -72,13 +72,21 @@ data = cursor.fetchone()
 print('数据库在本次录入前已存在%s条记录' % (data[0],))
 num_added_total = 0
 for i in range(args.start_index, args.max_index, args.results_per_iteration):
-    print("当前阶段：%i - %i" % (i, i + args.results_per_iteration))
-    query = 'search_query=%s&sortBy=lastUpdatedDate&sortOrder=ascending&start=%i&max_results=%i' % (
-        args.search_query,
-        i, args.results_per_iteration)
-    with urllib.request.urlopen(base_url + query) as url:
-        response = url.read()
-    parse = feedparser.parse(response)
+    # 当arxiv无响应时强制重试
+    parse_entries_len = 0
+    while parse_entries_len == 0:
+        print("当前阶段：%i - %i" % (i, i + args.results_per_iteration))
+        query = 'search_query=%s&sortBy=lastUpdatedDate&sortOrder=ascending&start=%i&max_results=%i' % (
+            args.search_query,
+            i, args.results_per_iteration)
+        with urllib.request.urlopen(base_url + query) as url:
+            response = url.read()
+        parse = feedparser.parse(response)
+        parse_entries_len = len(parse.entries)
+        if parse_entries_len == 0:
+            print(response)
+            print('arxiv无响应，程序3分钟后重试')
+            time.sleep(180)
     num_added = 0
     num_skipped = 0
     for e in parse.entries:
@@ -124,12 +132,6 @@ for i in range(args.start_index, args.max_index, args.results_per_iteration):
         # exit()
 
     print('本阶段新增 %d 条记录, 已存在（跳过） %d 条记录' % (num_added, num_skipped))
-
-    if len(parse.entries) == 0:
-        print('arxiv无响应，程序退出，请重试')
-        print(response)
-        break
-
     if num_added == 0 and args.break_on_no_added == 1:
         print('本阶段没有新的文件被添加')
 
