@@ -12,7 +12,7 @@ print('开始下载pdf')
 timeout_secs = 10  # 超时后放弃该次下载
 if not os.path.exists(Config.pdf_dir): os.makedirs(Config.pdf_dir)
 have = set(os.listdir(Config.pdf_dir))  # 获取已下载的pdf列表
-print(have)
+# print(have)
 numok = 0
 numtot = 0
 
