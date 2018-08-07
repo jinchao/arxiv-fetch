@@ -55,7 +55,7 @@ parser.add_argument('--search-query', type=str,
 parser.add_argument('--start-index', type=int, default=0, help='0 = most recent API result')
 parser.add_argument('--max-index', type=int, default=1000000, help='upper bound on paper index we will fetch')
 parser.add_argument('--results-per-iteration', type=int, default=100, help='passed to arxiv API')
-parser.add_argument('--wait-time', type=float, default=60,
+parser.add_argument('--wait-time', type=float, default=5,
                     help='lets be gentle to arxiv API (in number of seconds)')
 parser.add_argument('--break-on-no-added', type=int, default=1,
                     help='break out early if all returned query papers are already in db? 1=yes, 0=no')
@@ -85,8 +85,8 @@ for i in range(args.start_index, args.max_index, args.results_per_iteration):
         parse_entries_len = len(parse.entries)
         if parse_entries_len == 0:
             print(response)
-            print('arxiv无响应，程序3分钟后重试')
-            time.sleep(180)
+            print('arxiv无响应，程序5秒后重试')
+            time.sleep(5)
     num_added = 0
     num_skipped = 0
     for e in parse.entries:
