@@ -44,15 +44,18 @@ db = pymysql.connect(db_config['host'], db_config['user'], db_config['password']
 # 使用 cursor() 方法创建一个游标对象 cursor
 cursor = db.cursor()
 
-# 关闭数据库连接
-# db.close()
+sql = 'select count(*) from pdf_list;'
+cursor.execute(sql)
+data = cursor.fetchone()
+have_num = data[0]
+print('数据库在本次录入前已存在%s条记录' % (have_num,))
 
 # 解析输入参数
 parser = argparse.ArgumentParser()
 parser.add_argument('--search-query', type=str,
                     default='cat:cs.AI+OR+cat:cs.AR+OR+cat:cs.CC+OR+cat:cs.CE+OR+cat:cs.CG+OR+cat:cs.CL+OR+cat:cs.CR+OR+cat:cs.CV+OR+cat:cs.CY+OR+cat:cs.DB+OR+cat:cs.DC+OR+cat:cs.DL+OR+cat:cs.DM+OR+cat:cs.DS+OR+cat:cs.ET+OR+cat:cs.FL+OR+cat:cs.GL+OR+cat:cs.GR+OR+cat:cs.GT+OR+cat:cs.HC+OR+cat:cs.IR+OR+cat:cs.IT+OR+cat:cs.LG+OR+cat:cs.LO+OR+cat:cs.MA+OR+cat:cs.MM+OR+cat:cs.MS+OR+cat:cs.NA+OR+cat:cs.NE+OR+cat:cs.NI+OR+cat:cs.OH+OR+cat:cs.OS+OR+cat:cs.PF+OR+cat:cs.PL+OR+cat:cs.RO+OR+cat:cs.SC+OR+cat:cs.SD+OR+cat:cs.SE+OR+cat:cs.SI+OR+cat:cs.SY',
                     help='query used for arxiv API. See http://arxiv.org/help/api/user-manual#detailed_examples')
-parser.add_argument('--start-index', type=int, default=0, help='0 = most recent API result')
+parser.add_argument('--start-index', type=int, default=have_num, help='0 = most recent API result')
 parser.add_argument('--max-index', type=int, default=1000000, help='upper bound on paper index we will fetch')
 parser.add_argument('--results-per-iteration', type=int, default=100, help='passed to arxiv API')
 parser.add_argument('--wait-time', type=float, default=5,
@@ -66,10 +69,6 @@ print('抓取arXiv的参数为：%s' % (args.search_query,))
 
 # -----------------------------------------------------------------------------
 # fetch主程序
-sql = 'select count(*) from pdf_list;'
-cursor.execute(sql)
-data = cursor.fetchone()
-print('数据库在本次录入前已存在%s条记录' % (data[0],))
 num_added_total = 0
 for i in range(args.start_index, args.max_index, args.results_per_iteration):
     # 当arxiv无响应时强制重试
@@ -138,5 +137,7 @@ for i in range(args.start_index, args.max_index, args.results_per_iteration):
     print('休息%i秒' % (args.wait_time,))
     time.sleep(args.wait_time + random.uniform(0, 3))
 
+# 关闭数据库连接
+db.close()
 # 保存pdf
 os.system("python download_pdfs.py")
