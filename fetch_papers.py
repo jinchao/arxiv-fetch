@@ -90,7 +90,6 @@ for c in Config.search_cat:
             print("当前阶段：%i - %i" % (i, i + per_iteration))
             parse = query_result(search_cat, i, per_iteration)
             total_results = parse.feed.opensearch_totalresults
-            print('当前分类下的结果总数：%s' % total_results)
             parse_entries_len = len(parse.entries)
             if parse_entries_len == 0:
                 print('arxiv无响应，程序%s秒后重试' % (wait_time,))
@@ -135,7 +134,7 @@ for c in Config.search_cat:
                 db.commit()
                 num_added += 1
                 num_added_total += 1
-
+        print('当前分类下的结果总数：%s' % total_results)
         print('本阶段新增 %d 条记录, 已存在（跳过） %d 条记录' % (num_added, num_skipped))
         if num_added == 0:
             print('本阶段没有新的记录被添加')
