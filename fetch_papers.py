@@ -78,8 +78,9 @@ for i in range(args.start_index, args.max_index, args.results_per_iteration):
         query = 'search_query=%s&sortBy=lastUpdatedDate&sortOrder=ascending&start=%i&max_results=%i' % (
             args.search_query,
             i, args.results_per_iteration)
-        with urllib.request.urlopen(base_url + query) as url:
-            print('当前请求url：%s' % url)
+        current_url = base_url + query
+        print('当前请求url：%s' % current_url)
+        with urllib.request.urlopen(current_url) as url:
             response = url.read()
         parse = feedparser.parse(response)
         parse_entries_len = len(parse.entries)
