@@ -57,7 +57,7 @@ parser.add_argument('--search-query', type=str,
                     help='query used for arxiv API. See http://arxiv.org/help/api/user-manual#detailed_examples')
 parser.add_argument('--start-index', type=int, default=have_num, help='0 = most recent API result')
 parser.add_argument('--max-index', type=int, default=1000000, help='upper bound on paper index we will fetch')
-parser.add_argument('--results-per-iteration', type=int, default=100, help='passed to arxiv API')
+parser.add_argument('--results-per-iteration', type=int, default=500, help='passed to arxiv API')
 parser.add_argument('--wait-time', type=float, default=5,
                     help='lets be gentle to arxiv API (in number of seconds)')
 parser.add_argument('--break-on-no-added', type=int, default=1,
