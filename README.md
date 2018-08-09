@@ -1,5 +1,5 @@
 # arxiv-fetch
-这是一个按分类（cat）获取 https://arxiv.org 上所有pdf的脚本，参考 karpathy/arxiv-sanity-preserver。
+这是一个按分类（cat）获取 https://arxiv.org 上所有pdf的脚本（Python 3.0+），参考 karpathy/arxiv-sanity-preserver。
 
 ## 准备
 > 1. 数据库结构文件为pdf_list.sql，仅支持MySQL/MariaDB，如需支持其他数据库请自行修改代码。
