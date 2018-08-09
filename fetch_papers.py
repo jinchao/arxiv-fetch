@@ -79,6 +79,7 @@ for i in range(args.start_index, args.max_index, args.results_per_iteration):
             args.search_query,
             i, args.results_per_iteration)
         with urllib.request.urlopen(base_url + query) as url:
+            print('当前请求url：%s' % url)
             response = url.read()
         parse = feedparser.parse(response)
         parse_entries_len = len(parse.entries)
