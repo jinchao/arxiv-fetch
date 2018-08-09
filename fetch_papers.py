@@ -63,7 +63,7 @@ for c in Config.search_cat:
     # 先查询下当前条件下的结果总数，作为max_index的默认值
     res = query_result(search_cat, 0, 1)
     total_results = res.feed.opensearch_totalresults
-    print('当前分类下结果总数：%s' % total_results)
+    print('当前分类下的结果总数：%s' % total_results)
     # 查询当前分类下已录入的条数
     sql = 'select count(*) from pdf_list where cat=%s;'
     cursor.execute(sql, (search_cat,))
@@ -89,6 +89,8 @@ for c in Config.search_cat:
         while parse_entries_len == 0:
             print("当前阶段：%i - %i" % (i, i + per_iteration))
             parse = query_result(search_cat, i, per_iteration)
+            total_results = parse.feed.opensearch_totalresults
+            print('当前分类下的结果总数：%s' % total_results)
             parse_entries_len = len(parse.entries)
             if parse_entries_len == 0:
                 print('arxiv无响应，程序%s秒后重试' % (wait_time,))
